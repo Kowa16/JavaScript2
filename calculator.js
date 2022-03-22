@@ -5,14 +5,14 @@ const numberElements = document.querySelectorAll('.js-number');
 const operatorElements = document.querySelectorAll('.js-operator');
 
 // 各変数を定義する
-let isInsertNumber = true; // 数字入力中かどうか
-let isResult = false; // =を押した後かどうか
-let currentNumber = '0'; // 現在選択中の数字
-let currentOperator = ''; // 現在選択中の演算子
-let numbers = []; // 押した数字の配列を格納する
-let operators = []; // 押した演算子の配列を格納する
+let isInsertNumber = true; 
+let isResult = false; 
+let currentNumber = '0'; 
+let currentOperator = ''; 
+let numbers = []; 
+let operators = []; 
 
-// 計算窓に表示する
+// ディスプレイ
 const showDisplay = () => {
   if (isInsertNumber) {
     const text = String(currentNumber);
@@ -23,7 +23,7 @@ const showDisplay = () => {
   }
 };
 
-// 演算子の計算する
+// 計算
 const calculate = (prev, current, index) => {
   switch (operators[index]) {
     case '+':
@@ -39,15 +39,13 @@ const calculate = (prev, current, index) => {
   }
 };
 
-// 数字配列の左端から順に一つ前の演算子で計算して、すべての計算結果を返す
 const total = () => {
   return numbers.reduce((prev, current, index) => {
     return calculate(prev, current, index - 1);
   });
 };
 
-
-// 数字をクリックしたときの振る舞い ... (1)
+//クリック時
 const selectNumber = num => {
   // = を押した直後
   if (isResult) {
@@ -62,7 +60,7 @@ const selectNumber = num => {
     isInsertNumber = true;
   }
 
-  // 連続の . は不可
+  // 連続の . 防止
   if (num === '.' && currentNumber.includes('.')) {
     return;
   }
@@ -70,7 +68,6 @@ const selectNumber = num => {
   currentNumber += num;
 };
 
-// 数字ボタンの一つ一つに (1) の振る舞いをセットしていく
 numberElements.forEach(numberElement => {
   numberElement.addEventListener('click', event => {
     selectNumber(event.target.value);
@@ -78,8 +75,6 @@ numberElements.forEach(numberElement => {
   });
 });
 
-
-// 演算子をクリックしたときの振る舞い ... (2)
 const selectOparator = op => {
   if (isInsertNumber) {
     numbers.push(Number(currentNumber));
@@ -89,7 +84,6 @@ const selectOparator = op => {
   currentOperator = op;
 };
 
-// 演算子ボタンの一つ一つに (2) の振る舞いをセットしていく
 operatorElements.forEach(operatorElement => {
   operatorElement.addEventListener('click', event => {
     selectOparator(event.target.value);
@@ -97,8 +91,6 @@ operatorElements.forEach(operatorElement => {
   });
 });
 
-
-// = をクリックしたときの振る舞い ... (3)
 const showResult = () => {
   if (isInsertNumber && currentOperator && !isResult) {
     numbers.push(Number(currentNumber));
@@ -110,14 +102,11 @@ const showResult = () => {
   }
 };
 
-// = ボタンに (3) の振る舞いをセットする
 resultElement.addEventListener('click', () => {
   showResult();
   showDisplay();
 });
 
-
-// C をクリックしたときの振る舞い ... (4)
 const clear = () => {
   numbers = [];
   operators = [];
@@ -126,7 +115,6 @@ const clear = () => {
   isInsertNumber = true;
 };
 
-  // C ボタンに (4) の振る舞いをセットする
 clearElement.addEventListener('click', () => {
   clear();
   showDisplay();
